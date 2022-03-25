@@ -4,7 +4,8 @@ const getGoals = (req, res) => {
 
 const setGoal = (req, res) => {
     if(!req.body.text) {
-        res.status(400).json({message: "Goal is required"});
+        res.status(400);
+        throw new Error("Goal is required");
     }
     res.status(201).json({message: "goal created"})
 }
