@@ -1,11 +1,28 @@
 const mongoose = require("mongoose");
 
+function min(value) {
+    if(value.length < 3) return false;
+    return true;
+}
+function max(value) {
+    if(value.langth > 20) return false;
+    return true;
+}
+function req(value) {
+    if(!value.length) return false;
+    return true;
+}
+
+const validators = [
+    {validator: req, msg: "This field is rquired"},
+    {validator: min, msg: "Too short, minimum length 3 required"},
+    {validator: max, msg: "Length should not exceed 20"},
+]
+
 const userSchema = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Name is required"],
-        min: [3, "Must be at least 3 char long, got {VALUE}"],
-        max: [20, "Name length should not exceed 20"]
+        validate: validators
     },
     email: {
         type: String,
@@ -19,15 +36,12 @@ const userSchema = mongoose.Schema({
             },
             message: "Use a valid email address."
         },
-        required: [true, "Email is required"],
         unique: true
         
     },
     password: {
         type: String,
-        required: [true, "Name is required"],
-        min: [3, "Password must be at least 3 char long, got {VALUE}"],
-        max: [20, "Password length should not exceed 20"]
+        validate: validators
     },
     gender: {
         type: String,
