@@ -16,7 +16,12 @@ const config = {
     baseURL: process.env.BASE_URL,
     clientID: process.env.CLIENT_ID,
     issuerBaseURL: process.env.ISSUER_BASE_URL,
-    secret: process.env.SECRET
+    secret: process.env.SECRET,
+    clientSecret: process.env.CLIENT_SECRET,
+    idpLogout: true,
+    authorizationParams: {
+        response_type: 'code id_token',
+    }
 };
   
 app.use(
@@ -34,8 +39,8 @@ app.use("/signin", requiresAuth(), require("./routes/auth0Route"));
 app.use("/api/goals", require("./routes/goalRouts"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/", asyncHandler(async function(req, res) {
-    // let { token_type, access_token } = req.oidc.user;
-    console.log(req.oidc.user);
+    let data = await req.oidc.fetchUserInfo();
+    console.log(data);
     res.send(`<p>${JSON.stringify(req.oidc.user, null, 4)}</p>`);
 }))
 app.use(errorHandler);
